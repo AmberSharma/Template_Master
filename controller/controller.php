@@ -129,7 +129,7 @@ class MyClass {
             require_once("../model/model.php");
            
 			$result = new result();
-            $fetchResult = $result->SaveTemplate();
+            $fetchResult = $result->Save();
             if($fetchResult[0]['options'] <> "NUll")
             {
             	$arr =explode(",", $fetchResult[0]['options']);
@@ -198,6 +198,8 @@ class MyClass {
     	 	$result = new result();
     		$fetchResult = $result->findTemplate();
     		//print_r($fetchResult);die;
+		if($fetchResult)
+		{
 		echo "<table>";
 		echo "<tr><td>S no.</td><td>Template Name</td><td colspan='2'>Options</td></tr>";
 
@@ -214,6 +216,9 @@ class MyClass {
 				echo "<tr><td>". $j ."</td><td>". $fetchResult[$i] . "</td><td><a href='javascript:void(0)' onclick=edit('".$fetchResult[$i]."')>Edit</a><br /></td><td><a href='javascript:void(0)'>Delete</a><br /></td></tr>";
     			}
 		}
+		}
+		else 
+		echo "No Template Found"; 
     
     	}
         	 
@@ -248,52 +253,7 @@ class MyClass {
     
     }
     
-	public function Updatetemplate(){
-      		
-            require_once("../model/model.php");
-           
-			$result = new result();
-            $fetchResult = $result->SaveTemplate();
-            if($fetchResult[0]['options'] <> "NUll")
-            {
-            	$arr =explode(",", $fetchResult[0]['options']);
-            }
-            
-    		for($i = 0 ; $i < count($fetchResult) ; $i++)
-    		{
-    		
-    			if($fetchResult[$i]['type']==="checkbox" || $fetchResult[$i]['type']==="radio")
-    			{
-    				echo $fetchResult[$i]['label'] . "<br />";
-    				for($j = 0 ; $j < count($arr) ; $j ++)
-    				{
-    					
-    					echo $arr[$j]."<input type='" . $fetchResult[$i]['type'] . "' value='" . $arr[$j] . "' name='" .$fetchResult[$i]['fid'] . "' ></input><br /><br />";
-    				}
-    			}
-    			else if($fetchResult[$i]['type']==="dropdown"){
-    				echo $fetchResult[$i]['label'];
-    				echo "<select name='" . $fetchResult[$i]['fid'] . "'>";
-    				for($j = 0 ; $j < count($arr) ; $j ++)
-    				{
-    					echo "<option value='"  .  $arr[$j] . "'>";echo $arr[$j];echo "</option>";
-    				}
-    			    echo "</select>";
-    			}
-    			
-    			    			
-    			else if($fetchResult[$i]['type']==="text")
-    			{
-    				echo $fetchResult[$i]['label']."<input type='" . $fetchResult[$i]['type'] . "' value='" . $fetchResult[$i]['def'] . "' name='" .$fetchResult[$i]['fid'] . "' ></input><br /><br />";
-    			}
-    			else
-    			{
-    				echo $fetchResult[$i]['label']."<" .$fetchResult[$i]['type'] . " rows='5' cols='15' border='1px solid red;'></" .$fetchResult[$i]['type']. "><br /><br />";
-    			}
-    		}
-    		//echo "</select>";
-      
-    }
+	
     public function Fetchresult(){
     	
         if(isset($_SESSION['uname'])){

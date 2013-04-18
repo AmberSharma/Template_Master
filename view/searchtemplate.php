@@ -1,11 +1,12 @@
-<script	src='http://localhost/Template_Master/trunk/javascript/jquery.tools.min.js'></script>
+
+<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <link rel="stylesheet" href="http://localhost/Template_Master/trunk/css/style.css">
 
 <script type="text/javascript">
 var template;
 function selectfield()
 {
-	$("#output2").load("selectfield.php");
+	$("#output2").load("edittemp.php");
 }
 
 function funsearch(argument) {
@@ -76,7 +77,7 @@ function savetemplate()
 	
 	$.ajax({ 
 	    type: "POST",
-	    url: 'http://localhost/Template_Master/trunk/controller/controller.php?type='+strUser+"&method=Updatetemplate&tempname="+template,
+	    url: 'http://localhost/Template_Master/trunk/controller/controller.php?type='+strUser+"&method=addresult&tempname="+template,
 	    data: $('#frm').serialize(),
 	    success: function(data){
 	    
@@ -93,6 +94,7 @@ function savetemplate()
 
 	<form id="frm" method="post">
 		Search:<INPUT type="text"  name="id" onkeyup="funsearch(this.value)" /><br />
+		
 		 <table id="output"></table>
 	
 <div id="output1"></div>

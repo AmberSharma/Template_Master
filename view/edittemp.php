@@ -1,5 +1,41 @@
-<?php
-?>
+
+<style>
+
+
+	/* the overlayed element */
+.simple_overlay {
+ 
+    /* must be initially hidden */
+    display:none;
+ 
+    /* place overlay on top of other elements */
+    z-index:10000;
+ 
+    /* styling */
+    background-color:#FFB140;
+ 
+    min-width:600px;
+    min-height:200px;
+    border:1px solid #666;
+    border-radius:5px;
+ 
+    /* CSS3 styling for latest browsers */
+    -moz-box-shadow:0 0 90px 5px #000;
+    -webkit-box-shadow: 0 0 90px #000;
+}
+ 
+/* close button positioned on upper right corner */
+.simple_overlay .close {
+    background-image:url(http://localhost/Template_Master/trunk/image/close.png);
+    position:absolute;
+    right:-15px;
+    top:-15px;
+    cursor:pointer;
+    height:35px;
+    width:35px;
+}
+
+</style>
 <script type="text/javascript">
 var a=0;
 $(document).ready(function() {
@@ -26,6 +62,24 @@ function addnew()
 {
 	$('#field').append("Options:<input type='text' id='def' name='opt[]' class='required'><br /><br />");
 }
+
+function fetchtemplate()
+{
+	strUser = $("#temp option:selected").val();
+	
+	$.ajax({ 
+	    type: "POST",
+	    url: 'http://localhost/Template_Master/trunk/controller/controller.php?val='+template+"&method=temp",
+	    //data: $('#frmid').serialize(),
+	    success: function(data){
+	    
+		$('#content').html(data);
+	    	
+	    	}
+	   });
+	
+	
+} 
 function onchange_action(str = "")
 {
 	var abc = $("#inputtype option:selected").val();
@@ -93,9 +147,16 @@ function onchange_action(str = "")
 					</div>
 					<div id="xyz" >
 							
-							<input type='button' value='Save' id='btnSubmit' onclick="save()"/><br /><br />
-							<a href='chtemp.php' target=_blank >Preview</a><br /><br />
+							<input type='button' value='Save' id='btnSubmit' onclick="savetemplate()"/><br /><br />
+							<img src="http://localhost/Template_Master/trunk/image/preview.png" rel="#mies1" height=100px; width="100px;" onclick="fetchtemplate()"/>
 							
 							
 					</div>
-					
+					<div class="simple_overlay" id="mies1">
+					<div id="content"></div>
+</div>
+
+
+<script>
+$("img[rel]").overlay();
+</script>

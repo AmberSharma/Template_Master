@@ -11,7 +11,8 @@ abstract class model {
 	}
 }
 class result extends model {
-	public function Save() {
+public function Save() {
+		print_r($_REQUEST);
 		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown") {
 			$opt = implode ( ",", $_REQUEST ['opt'] );
 		}
@@ -20,7 +21,7 @@ class result extends model {
 		$bool1 = "false";
 		if ($i == 0) {
 			
-			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "( fid int primary key auto_increment , type varchar(20) , def varchar(30) , label varchar(30) , options varchar(100));" );
+			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "( fid int primary key auto_increment , type varchar(20) , def varchar(30) , label varchar(30) , options varchar(100) ,sequence varchar(5));" );
 			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "values ( fid int primary key auto_increment);" );
 			$i ++;
 		}
@@ -29,38 +30,24 @@ class result extends model {
 			$this->db->Create ( "Alter table " . $_REQUEST ['tempname'] . "values add Column " . $_REQUEST ['fl'] . " " . $_REQUEST ['dt'] . ";" );
 			
 		}
-		echo $this->db->lastQuery();
+
 		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown")
-			$this->db->Fields ( array (
-					"type" => $_REQUEST ['type'],
-					"def" => $_REQUEST ['def'],
-					"label" => $_REQUEST ['fl'],
-					"options" => $opt 
-			) );
+			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"label" => $_REQUEST ['fl'],"options" => $opt ) );
 		else
-			$this->db->Fields ( array (
-					"type" => $_REQUEST ['type'],
-					"def" => $_REQUEST ['def'],
-					"label" => $_REQUEST ['fl'],
-					"options" => "NUll" 
-			) );
+			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"label" => $_REQUEST ['fl'],"options" => "NUll" ) );
 		$this->db->From ( $_REQUEST ['tempname'] );
 		if ($j == 0) {
 			$bool1 = $this->db->Insert ();
+			//echo $this->db->lastQuery();
 			$j ++;
 		} else {
 			$bool1 = $this->db->Update ();
 		}
 		
+		
 		if ($bool1) {
 			
-			$this->db->Fields ( array (
-					"type",
-					"def",
-					"label",
-					"fid",
-					"options" 
-			) );
+			$this->db->Fields ( array ("type","def","label","fid","options", "sequence") );
 			//session['table']= $_REQUEST ['tempname'];
 			$this->db->From ( $_REQUEST ['tempname'] );
 			$id = $this->db->lastInsertId ();
@@ -89,16 +76,10 @@ class result extends model {
 	public function temp($val) {
 		// echo $val;
 		
-		$this->db->Fields ( array (
-				"type",
-				"def",
-				"label",
-				"fid",
-				"options" 
-		) );
+		$this->db->Fields ( array ("type","def","label","fid","options", "sequence" ) );
 		$this->db->From ( $val );
 		// $this->db->Where(array("tmpname"=>$val));
-		// $this->db->GroupBy("tmpname");
+		 $this->db->OrderBy("sequence");
 		$this->db->Select ();
 		//echo $this->db->lastQuery();
 		$result = $this->db->resultArray ();
@@ -106,7 +87,7 @@ class result extends model {
 	}
 
 	public function editTemplate($val) {
-		$this->db->Fields (array ("type","def","label","fid","options" ));
+		$this->db->Fields (array ("type","def","label","fid","options","sequence" ));
 		$this->db->From ($val);
 		$this->db->Select();
 		$result = $this->db->resultArray ();
@@ -144,76 +125,16 @@ class result extends model {
 	}
 	
 	public function findTemplate() {
+		$result =array();
 		$sql = "Show tables like '".$_REQUEST['strval']."%'";
 		$a = mysql_query ( $sql );
 		while ( $row = mysql_fetch_array ( $a ) ) {
-			echo "<pre>";
+			
 			$result [] = $row ['Tables_in_templatemaster ('. $_REQUEST["strval"].'%)' ];
 		}
 		return $result;
 	}
 	
-	public function SaveTemplate() {
-		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown") {
-			$opt = implode ( ",", $_REQUEST ['opt'] );
-		}
-		static $i = 0;
-		static $j =0;
-		$bool1 = "false";
-		if ($i == 0) {
-			
-			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "( fid int primary key auto_increment , type varchar(20) , def varchar(30) , label varchar(30) , options varchar(100));" );
-			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "values ( fid int primary key auto_increment);" );
-			$i ++;
-		}
-		if ($i <> 0) {
-			
-			$this->db->Create ( "Alter table " . $_REQUEST ['tempname'] . "values add Column " . $_REQUEST ['fl'] . " " . $_REQUEST ['dt'] . ";" );
-			
-		}
-		echo $this->db->lastQuery();
-		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown")
-			$this->db->Fields ( array (
-					"type" => $_REQUEST ['type'],
-					"def" => $_REQUEST ['def'],
-					"label" => $_REQUEST ['fl'],
-					"options" => $opt 
-			) );
-		else
-			$this->db->Fields ( array (
-					"type" => $_REQUEST ['type'],
-					"def" => $_REQUEST ['def'],
-					"label" => $_REQUEST ['fl'],
-					"options" => "NUll" 
-			) );
-		$this->db->From ( $_REQUEST ['tempname'] );
-		if ($j == 0) {
-			$bool1 = $this->db->Insert ();
-			$j ++;
-		} else {
-			$bool1 = $this->db->Update ();
-		}
-		
-		if ($bool1) {
-			
-			$this->db->Fields ( array (
-					"type",
-					"def",
-					"label",
-					"fid",
-					"options" 
-			) );
-			//session['table']= $_REQUEST ['tempname'];
-			$this->db->From ( $_REQUEST ['tempname'] );
-			$id = $this->db->lastInsertId ();
-			$this->db->Where ( array (
-					"fid" => $id 
-			) );
-			$this->db->Select ();
-			$result = $this->db->resultArray ();
-		}
-		if ($result)
-			return $result;
-	}
+	
 }
 ?>
