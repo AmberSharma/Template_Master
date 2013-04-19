@@ -3,6 +3,10 @@
 <link rel="stylesheet" href="http://localhost/Template_Master/trunk/css/style.css">
 
 <script type="text/javascript">
+$(document).ready(function() {
+	$('#output').hide();
+   $('#output1').hide();
+});
 var template;
 function selectfield()
 {
@@ -26,6 +30,7 @@ beforeSend: function() {
 	
         },
 	        success: function(data){
+	        	$('#output').show();
 	        	$("#output").html('');
 	                 $("#output").append(data);
         },
@@ -35,7 +40,7 @@ beforeSend: function() {
  
 }
 
-function edit(argument) {
+function edit(argument = "") {
 template = argument;
 //alert(argument);
 //var strdata=$("#id").val();
@@ -44,6 +49,7 @@ type: "POST", // Post / Get method
 url: 'http://localhost/Template_Master/trunk/controller/controller.php?val='+argument+"&method=edittemplate", //Where form data is sent on submission
 dataType:"text", // Data type, HTML, json etc.
 	        success: function(data){
+	        	$('#output1').show();
 	        	$("#output1").html('');
 	                 $("#output1").append(data);
         },
@@ -52,6 +58,27 @@ dataType:"text", // Data type, HTML, json etc.
 
  
 }
+
+function del(argument) {
+	//alert(argument);
+	// template = argument;
+	//alert(argument);
+	//var strdata=$("#id").val();
+	$.ajax({
+	type: "POST", // Post / Get method
+	url: 'http://localhost/Template_Master/trunk/controller/controller.php?val='+argument+"&method=deletetemplate", //Where form data is sent on submission
+	dataType:"text", // Data type, HTML, json etc.
+		        success: function(data){
+			        //alert(data);
+		        	if($.trim(data)=="1") {
+		            	funsearch();
+		            }
+	        }
+		        
+	});
+ 
+	 
+	}
 function save()
 {
 	
@@ -91,7 +118,7 @@ function savetemplate()
 
 
 </SCRIPT>
-
+<center>
 	<form id="frm" method="post">
 		Search:<INPUT type="text"  name="id" onkeyup="funsearch(this.value)" /><br />
 		
@@ -101,3 +128,4 @@ function savetemplate()
 <div id="output2"></div>
 
 </form>
+</center>

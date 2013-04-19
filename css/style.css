@@ -8,3 +8,76 @@ table td
 	border:1px solid red;	
 	border-radius:2px;
 }
+#field
+{
+	margin:10px;
+	padding:20px;
+	border:1px solid grey;	
+	border-radius:10px;
+	width:280px;
+	background-color: #72B8AF;
+}
+
+#field input
+{
+	
+		display: table;
+}
+#field select
+{
+	
+		display: table;
+}
+#xyz
+{
+	margin:10px;
+	padding:20px;
+	border:1px solid grey;	
+	border-radius:10px;
+	width:280px;
+	
+	background-color: #72B8AF;
+}
+a
+{
+	text-decoration: none;
+}
+#output 
+{
+	margin:10px;
+		padding:45px;
+	
+}
+#output1
+{
+	margin:10px;
+	padding:20px;
+	border:1px solid grey;	
+	border-radius:10px;
+	width:280px;
+	background-color: #72B8AF;
+	
+}
+#output1 input
+{
+	
+		display: table;
+}
+#output1 select
+{
+	
+		display: table;
+}
+.button
+{
+	border-radius:4px; 
+	
+}
+center
+{
+	border-radius:4px; 
+	border:1px solid grey;
+	width:440px;	
+	margin-left:380px;
+	background-color: #88C99F;
+}

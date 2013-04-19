@@ -1,5 +1,6 @@
 <script	src='http://localhost/Template_Master/trunk/javascript/jquery.tools.min.js'></script>
 <script	src='http://localhost/Template_Master/trunk/javascript/jquery.validate.js'></script>
+<link rel="stylesheet" href="http://localhost/Template_Master/trunk/css/style.css">
 <script type="text/javascript">
 
 function dis()
@@ -31,6 +32,7 @@ function save()
 }
 
 </script>
+<center>
 <form id="frmid">
 Template Name:<input type="text" id="tmpname" name="tempname" class="required" onblur="dis()"> 
 
@@ -39,3 +41,4 @@ Template Name:<input type="text" id="tmpname" name="tempname" class="required" o
 <div id="div1" ></div>
 </form>
 <div id="new"></div>
+</center>

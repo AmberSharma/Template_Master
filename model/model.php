@@ -12,7 +12,7 @@ abstract class model {
 }
 class result extends model {
 public function Save() {
-		print_r($_REQUEST);
+		//print_r($_REQUEST);
 		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown") {
 			$opt = implode ( ",", $_REQUEST ['opt'] );
 		}
@@ -21,20 +21,23 @@ public function Save() {
 		$bool1 = "false";
 		if ($i == 0) {
 			
-			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "( fid int primary key auto_increment , type varchar(20) , def varchar(30) , label varchar(30) , options varchar(100) ,sequence varchar(5));" );
+			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "( fid int primary key auto_increment , type varchar(20) , def varchar(30) , label varchar(30) , options varchar(100) ,sequence varchar(5) , validation varchar(30));" );
 			$this->db->Create ( "create table " . $_REQUEST ['tempname'] . "values ( fid int primary key auto_increment);" );
 			$i ++;
 		}
 		if ($i <> 0) {
 			
-			$this->db->Create ( "Alter table " . $_REQUEST ['tempname'] . "values add Column " . $_REQUEST ['fl'] . " " . $_REQUEST ['dt'] . ";" );
-			
+			$a=$this->db->Create ( "Alter table " . $_REQUEST ['tempname'] . "values add Column " . strtolower($_REQUEST ['fl']) . " " . $_REQUEST ['dt'] . ";" );
+			if($a <> 1)
+			{
+				die("This Field Already Exist...try with another Field Label");
+			}
 		}
 
 		if ($_REQUEST ['type'] === "checkbox" || $_REQUEST ['type'] === "radio" || $_REQUEST ['type'] === "dropdown")
-			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"label" => $_REQUEST ['fl'],"options" => $opt ) );
+			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"validation" => $_REQUEST ['val'],"label" => strtolower($_REQUEST ['fl']),"options" => $opt ) );
 		else
-			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"label" => $_REQUEST ['fl'],"options" => "NUll" ) );
+			$this->db->Fields ( array ("type" => $_REQUEST ['type'],"sequence" => $_REQUEST ['seq'],"def" => $_REQUEST ['def'],"validation" => $_REQUEST ['val'],"label" => strtolower($_REQUEST ['fl']),"options" => "NUll" ) );
 		$this->db->From ( $_REQUEST ['tempname'] );
 		if ($j == 0) {
 			$bool1 = $this->db->Insert ();
@@ -47,7 +50,7 @@ public function Save() {
 		
 		if ($bool1) {
 			
-			$this->db->Fields ( array ("type","def","label","fid","options", "sequence") );
+			$this->db->Fields ( array ("type","def","label","fid","options"));
 			//session['table']= $_REQUEST ['tempname'];
 			$this->db->From ( $_REQUEST ['tempname'] );
 			$id = $this->db->lastInsertId ();
@@ -76,12 +79,12 @@ public function Save() {
 	public function temp($val) {
 		// echo $val;
 		
-		$this->db->Fields ( array ("type","def","label","fid","options", "sequence" ) );
+		$this->db->Fields ( array ("type","def","label","fid","options", "sequence" , "validation") );
 		$this->db->From ( $val );
 		// $this->db->Where(array("tmpname"=>$val));
 		 $this->db->OrderBy("sequence");
 		$this->db->Select ();
-		//echo $this->db->lastQuery();
+		//echo $this->db->lastQuery();;die;
 		$result = $this->db->resultArray ();
 		return $result;
 	}
@@ -93,6 +96,20 @@ public function Save() {
 		$result = $this->db->resultArray ();
 		//echo $this->db->lastQuery();
 		return $result;
+	}
+		
+	public function deleteTemplate($val) {
+		$sql = "Drop Table ". $val;
+		$sql1 =  "Drop Table " . $val."values";
+		mysql_query ( $sql1 );
+		return mysql_query ( $sql );
+		
+		/* $this->db->Fields (array ("type","def","label","fid","options","sequence" ));
+		$this->db->From ($val);
+		$this->db->Select();
+		$result = $this->db->resultArray ();
+		//echo $this->db->lastQuery();
+		return $result; */
 	}
 
 	public function saveuserresult() {
